@@ -1,5 +1,5 @@
-import random
-from fpdf import FPDF
+from pdf_base.pdf_base import PDF
+from gerador_numeros.gerador_numeros import gerando_numeros
 
 print('Gerador de Calculos Matematicos (DIVISÃO)')
 print('Você precisa escolher o intervalo que deseja utilizar para montar os calculos!')
@@ -10,130 +10,102 @@ ordem = input('Deseja organizar com o maior fator primeiro e resto 0? [s]im ou [
 
 intervalo1 = int(intervalo1)
 intervalo2 = int(intervalo2)
-x1 = 12
 
-class PDF(FPDF):
-    def header(self):
-        self.image('65709.png', 0.7, 0.7, 1.5)
-        self.set_font('arial', 'B', 16)
-        self.set_text_color(0, 0, 0)
-        self.cell(0, 0.5, 'Gerador de calculos Matemáticos - Divisão', border=False, ln=True, align='R')
-        self.set_font('arial', 'IU', 15)
-        self.set_text_color(0, 0, 0)
-        self.ln(1)
-        self.cell(0, 0, cabecario, border=False, ln=True, align='C')
-        self.ln(2)
+titulo = 'Gerador de calculos Matemáticos - Divisão'
 
-    def footer(self):
-        self.set_y(28)
-        self.set_font('courier', 'I', 10)
-        self.cell(0, 1, f'Página {self.page_no()}/{{nb}}', align='C')
-
-
-pdf = PDF('P', 'cm', 'A4')
+pdf = PDF(titulo=titulo, cabecario=cabecario, imagem='65709.png')
 pdf.alias_nb_pages()
 pdf.add_page()
 pdf.set_text_color(0, 0, 0)
 pdf.set_font('courier', 'B', 18)
-linha = 1
-linha2 = 0.9
-coluna0 = 1
-coluna1 = 1.5
-coluna3 = 5
-coluna5 = 11
-coluna2 = 11.5
-coluna4 = 15
 
-if ordem == 'n':
-    x = 1
-    while x <= x1:
-        fator1 = random.randint(intervalo1, intervalo2)
-        fator2 = random.randint(intervalo1, intervalo2)
-        if x <= 6:
-            pdf.set_xy(coluna0, linha + 2.8)
-            pdf.multi_cell(1.5, 0.8, f'{x})', align='R')
-            pdf.set_xy(coluna1, linha + 2.8)
-            pdf.multi_cell(3, 0.8, f' {fator1}', align='R')
-            pdf.set_font('courier', 'BU', 18)
-            pdf.set_xy(coluna3, linha + 2.8)
-            pdf.multi_cell(3, 0.8, f'|{fator2} ', align='L')
-            pdf.set_font('courier', 'B', 18)
 
-            linha = linha + 4.2
+class DivisaoMontada:
+    def __init__(self, gerador, ordem, pdf, intervalo1, intervalo2):
+        self.gerador = gerador
+        self.ordem = ordem
+        self.pdf = pdf
+        self.linha = 10
+        self.linha2 = 9
+        self.coluna0 = 10
+        self.coluna1 = 15
+        self.coluna3 = 50
+        self.coluna5 = 110
+        self.coluna2 = 115
+        self.coluna4 = 150
+        self.x1 = 12
+        self.x = 1
+        self.fator1 = None
+        self.fator2 = None
+        self.intervalo1 = intervalo1
+        self.intervalo2 = intervalo2
 
-        else:
-            pdf.set_xy(coluna5, linha2 + 2.8)
-            pdf.multi_cell(1.5, 0.8, f'{x})', align='R')
-            pdf.set_xy(coluna2, linha2 + 2.8)
-            pdf.multi_cell(3, 0.8, f' {fator1}', align='R')
-            pdf.set_font('courier', 'BU', 18)
-            pdf.set_xy(coluna4, linha2 + 2.8)
-            pdf.multi_cell(3, 0.8, f'|{fator2} ', align='L')
-            pdf.set_font('courier', 'B', 18)
+    def exercicios(self):
+        if self.ordem == 'n':
+            while self.x <= self.x1:
+                self.fator1, self.fator2 = self.gerador(intervalo1=self.intervalo1, intervalo2=self.intervalo2)
+                if self.x <= 6:
+                    pdf.set_xy(self.coluna0, self.linha + 28)
+                    pdf.multi_cell(15, 8, f'{self.x})', align='R')
+                    pdf.set_xy(self.coluna1, self.linha + 28)
+                    pdf.multi_cell(30, 8, f' {self.fator1}', align='R')
+                    pdf.set_font('courier', 'BU', 18)
+                    pdf.set_xy(self.coluna3, self.linha + 28)
+                    pdf.multi_cell(30, 8, f'|{self.fator2} ', align='L')
+                    pdf.set_font('courier', 'B', 18)
 
-            linha2 = linha2 + 4.2
-
-        x = x + 1
-else:
-    x = 1
-    while x <= x1:
-        fator1 = random.randint(intervalo1, intervalo2)
-        fator2 = random.randint(intervalo1, intervalo2)
-        if fator1 > fator2:
-            if fator1 % fator2 == 0:
-                if fator1 > fator2:
-                    if x <= 6:
-                        pdf.set_xy(coluna0, linha + 2.8)
-                        pdf.multi_cell(1.5, 0.8, f'{x})', align='R')
-                        pdf.set_xy(coluna1, linha + 2.8)
-                        pdf.multi_cell(3, 0.8, f' {fator1}', align='R')
-                        pdf.set_font('courier', 'BU', 18)
-                        pdf.set_xy(coluna3, linha + 2.8)
-                        pdf.multi_cell(3, 0.8, f'|{fator2} ', align='L')
-                        pdf.set_font('courier', 'B', 18)
-
-                        linha = linha + 4.2
-
-                    else:
-                        pdf.set_xy(coluna5, linha2 + 2.8)
-                        pdf.multi_cell(1.5, 0.8, f'{x})', align='R')
-                        pdf.set_xy(coluna2, linha2 + 2.8)
-                        pdf.multi_cell(3, 0.8, f' {fator1}', align='R')
-                        pdf.set_font('courier', 'BU', 18)
-                        pdf.set_xy(coluna4, linha2 + 2.8)
-                        pdf.multi_cell(3, 0.8, f'|{fator2} ', align='L')
-                        pdf.set_font('courier', 'B', 18)
-
-                        linha2 = linha2 + 4.2
-
+                    self.linha = self.linha + 42
 
                 else:
-                    if x <= 6:
-                        pdf.set_xy(coluna0, linha + 2.8)
-                        pdf.multi_cell(1.5, 0.8, f'{x})', align='R')
-                        pdf.set_xy(coluna1, linha + 2.8)
-                        pdf.multi_cell(3, 0.8, f' {fator2}', align='R')
+                    pdf.set_xy(self.coluna5, self.linha2 + 28)
+                    pdf.multi_cell(15, 8, f'{self.x})', align='R')
+                    pdf.set_xy(self.coluna2, self.linha2 + 28)
+                    pdf.multi_cell(30, 8, f' {self.fator1}', align='R')
+                    pdf.set_font('courier', 'BU', 18)
+                    pdf.set_xy(self.coluna4, self.linha2 + 28)
+                    pdf.multi_cell(30, 8, f'|{self.fator2} ', align='L')
+                    pdf.set_font('courier', 'B', 18)
+
+                    self.linha2 = self.linha2 + 42
+
+                self.x = self.x + 1
+        else:
+            while self.x <= self.x1:
+                self.fator1, self.fator2 = self.gerador(intervalo1=self.intervalo1, intervalo2=self.intervalo2)
+                if self.fator1 % self.fator2 == 0:
+                    if self.x <= 6:
+                        pdf.set_xy(self.coluna0, self.linha + 28)
+                        pdf.multi_cell(15, 8, f'{self.x})', align='R')
+                        pdf.set_xy(self.coluna1, self.linha + 28)
+                        pdf.multi_cell(30, 8, f' {self.fator1}', align='R')
                         pdf.set_font('courier', 'BU', 18)
-                        pdf.set_xy(coluna3, linha + 2.8)
-                        pdf.multi_cell(3, 0.8, f'|{fator1} ', align='L')
+                        pdf.set_xy(self.coluna3, self.linha + 28)
+                        pdf.multi_cell(30, 8, f'|{self.fator2} ', align='L')
                         pdf.set_font('courier', 'B', 18)
 
-                        linha = linha + 4.2
+                        self.linha = self.linha + 42
 
                     else:
-                        pdf.set_xy(coluna5, linha2 + 2.8)
-                        pdf.multi_cell(1.5, 0.8, f'{x})', align='R')
-                        pdf.set_xy(coluna2, linha2 + 2.8)
-                        pdf.multi_cell(3, 0.8, f' {fator2}', align='R')
+                        pdf.set_xy(self.coluna5, self.linha2 + 28)
+                        pdf.multi_cell(15, 8, f'{self.x})', align='R')
+                        pdf.set_xy(self.coluna2, self.linha2 + 28)
+                        pdf.multi_cell(30, 8, f' {self.fator1}', align='R')
                         pdf.set_font('courier', 'BU', 18)
-                        pdf.set_xy(coluna4, linha2 + 2.8)
-                        pdf.multi_cell(3, 0.8, f'|{fator1} ', align='L')
+                        pdf.set_xy(self.coluna4, self.linha2 + 28)
+                        pdf.multi_cell(30, 8, f'|{self.fator2} ', align='L')
                         pdf.set_font('courier', 'B', 18)
 
-                        linha2 = linha2 + 4.2
+                        self.linha2 = self.linha2 + 42
+
+                    self.x = self.x + 1
+
+        return pdf.output('divisao_montada_4.pdf')
 
 
+exercicios = DivisaoMontada(gerador=gerando_numeros,
+                            ordem=ordem,
+                            pdf=pdf,
+                            intervalo1=intervalo1,
+                            intervalo2=intervalo2
+                            ).exercicios()
 
-                x = x + 1
-
-pdf.output('divisao_montada_2.pdf')

@@ -1,6 +1,6 @@
 import random
-
 from pdf_base.pdf_base import PDF
+from gerador_numeros.gerador_numeros import gerando_numeros
 
 print('Gerador de Calculos Matematicos')
 print('Você precisa escolher o intervalo que deseja utilizar para montar os calculos!')
@@ -16,12 +16,6 @@ pdf.alias_nb_pages()
 pdf.add_page()
 pdf.set_text_color(0, 0, 0)
 pdf.set_font('courier', '', 14)
-
-
-def gerando_numeros():
-    fator1 = random.randint(intervalo1, intervalo2)
-    fator2 = random.randint(intervalo1, intervalo2)
-    return fator1, fator2
 
 
 class ExerciciosLineares:
@@ -43,7 +37,7 @@ class ExerciciosLineares:
     def exercicios(self):
         if self.ordem == 'n':
             while self.x <= self.x1:
-                self.fator1, self.fator2 = self.gerador()
+                self.fator1, self.fator2 = self.gerador
                 if self.linha < 260 and self.coluna == 10:
                     self.pdf.multi_cell(self.tamanho_largura, self.tamanho_altura,
                                         f'{self.x}) {self.fator1} {self.operador} {self.fator2} =', border=True)
@@ -59,7 +53,7 @@ class ExerciciosLineares:
                 self.x = self.x + 1
         else:
             while self.x <= self.x1:
-                self.fator1, self.fator2 = self.gerador()
+                self.fator1, self.fator2 = self.gerador
                 if self.fator1 > self.fator2:
                     if self.linha < 260 and self.coluna == 10:
                         self.pdf.multi_cell(self.tamanho_largura, self.tamanho_altura,
@@ -90,5 +84,5 @@ class ExerciciosLineares:
         return self.pdf.output('multiplicacao_novo.pdf')
 
 
-exercicios = ExerciciosLineares(operador=operador, gerador=gerando_numeros, pdf=pdf, ordem=ordem).exercicios()
+exercicios = ExerciciosLineares(operador=operador, gerador=gerando_numeros(intervalo1=intervalo1, intervalo2=intervalo2), pdf=pdf, ordem=ordem).exercicios()
 
